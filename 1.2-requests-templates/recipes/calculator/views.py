@@ -1,4 +1,6 @@
+from django.http import HttpResponse
 from django.shortcuts import render
+
 
 DATA = {
     'omlet': {
@@ -28,3 +30,22 @@ DATA = {
 #     'ингредиент2': количество2,
 #   }
 # }
+
+
+def get_recipe(request, dish):
+    recipe = DATA.get(dish)
+    return HttpResponse(f'Sum = {recipe}')
+
+# def get_recipe(request):
+#     name = request.GET.get('name')
+#     age = int(request.GET.get('age', 20))
+#     print(age)
+#     return HttpResponse(f'hi, {name}')
+
+# def sum(request, a, b):
+#     result = a + b
+#     return HttpResponse(f'Sum = {result}')
+
+
+def hello(request):
+    return render(request, 'demo.html')

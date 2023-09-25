@@ -15,10 +15,10 @@ Including another URLconf
 """
 
 from django.urls import path
-from calculator.views import get_recipe, hello
+from calculator.views import get_recipe
 
 urlpatterns = [
-    path('recipe/<dish>/', get_recipe),
+    path('<str:dish>/', get_recipe),
     # path('sum/<int:a>/<int:b>/', sum),
-    path('hello/', hello),
+    # path('hello/<dish>/', hello),
 ]

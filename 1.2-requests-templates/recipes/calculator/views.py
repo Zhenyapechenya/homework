@@ -18,22 +18,21 @@ DATA = {
         'сыр, ломтик': 1,
         'помидор, ломтик': 1,
     },
-    # можете добавить свои рецепты ;)
 }
 
 
 def get_recipe(request, dish):
     servings = int(request.GET.get('servings', 1))
-    ingredients = DATA.get(dish)
-    for value in ingredients.values():
-        value = value * servings
+    ingredients = DATA.get(dish).copy()
 
-    ingredients['яйца, шт'] = ingredients['яйца, шт'] * servings
-    print(ingredients)
+    for key in ingredients:
+        ingredients[key] = DATA.get(dish)[key] * servings
     
     context = {
         'recipe': ingredients,
         'servings': servings
     }
-    print(servings)
+ 
     return render(request, 'demo.html', context)
+
+

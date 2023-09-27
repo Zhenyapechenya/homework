@@ -19,6 +19,4 @@ from calculator.views import get_recipe
 
 urlpatterns = [
     path('<str:dish>/', get_recipe),
-    # path('sum/<int:a>/<int:b>/', sum),
-    # path('hello/<dish>/', hello),
 ]

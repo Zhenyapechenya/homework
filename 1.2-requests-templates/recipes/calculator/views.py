@@ -35,4 +35,3 @@ def get_recipe(request, dish):
  
     return render(request, 'demo.html', context)
 
-

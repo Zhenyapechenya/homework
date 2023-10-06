@@ -10,22 +10,20 @@ def index(request):
 
 def show_catalog(request):
     template = 'catalog.html'
-    context = {}
+    sort = request.GET.get('sort')
+    phones = Phone.objects.all()
+    context = {
+        'phones': phones
+    }
     return render(request, template, context)
 
 
 def show_product(request, slug):
     template = 'product.html'
-    context = {}
+    phone = Phone.objects.get(slug=slug)
+    context = {
+        'phone': phone
+    }
     return render(request, template, context)
 
 
-def create_phone(request):
-    phone = Phone(name='test', price=0.00, lte_exists=True)
-    phone.save()
-    return HttpResponse(f'all good. new phone {phone.name}, {phone.price}')
-
-def list_phone(request):
-    phone_objects = Phone.objects.all()
-    phones = [f'{p.name}, {p.price}, {p.slug}' for p in phone_objects]
-    return HttpResponse('<br>'.join(phones))

@@ -16,8 +16,8 @@ class Command(BaseCommand):
             phones = list(csv.DictReader(file, delimiter=';'))
 
         for phone in phones:
-            p = Phone.objects.create(id=phone.get('id'), name=phone.get('name'), 
-                                    image=phone.get('image'), price=phone.get('price'),
-                                    release_date=phone.get('release_date'), 
-                                    lte_exists=phone.get('lte_exists'), slug = slugify(phone.get('name'))
+            p = Phone.objects.create(name=phone.get('name'), image=phone.get('image'), 
+                                    price=phone.get('price'), release_date=phone.get('release_date'), 
+                                    lte_exists=phone.get('lte_exists'), 
+                                    slug = slugify(phone.get('name'))
                                     )

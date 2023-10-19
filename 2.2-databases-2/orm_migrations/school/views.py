@@ -7,11 +7,11 @@ from .models import Student, Teacher
 def students_list(request):
     template = 'school/students_list.html'
     ordering = 'group'
-    student = Student.objects.order_by(ordering)
-    teacher = Teacher.objects.filter()
+    students = Student.objects.order_by(ordering)
+    # teacher = Teacher.objects.filter()
    
     context = {
-        'object_list': student
+        'object_list': students
     }
 
     # используйте этот параметр для упорядочивания результатов

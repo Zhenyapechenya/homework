@@ -26,7 +26,7 @@ class Student(models.Model):
         return self.name
 
 
-# class StudentPosition(models.Model):
-#     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='positions')
-#     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='positions')
-#     quantity = models.IntegerField
+class StudentPosition(models.Model):
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='positions')
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='positions')
+    quantity = models.IntegerField

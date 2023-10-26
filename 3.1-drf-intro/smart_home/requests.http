@@ -1,56 +1,56 @@
-GET http://localhost:8000/demo/
+# GET http://localhost:8000/demo/
+
+# ###
+
+# POST http://localhost:8000/demo/
+
+# ###
+# GET http://localhost:8000/weapon/3/
+
+
+
+# примеры API-запросов
+
+@baseUrl = http://localhost:8000/api
+
+# получение датчиков
+GET {{baseUrl}}/sensors/
+Content-Type: application/json
 
 ###
 
-POST http://localhost:8000/demo/
+# создание датчика
+POST {{baseUrl}}/sensors/
+Content-Type: application/json
+
+{
+  "name": "ESP66",
+  "description": "Датчик в гостиной"
+}
 
 ###
-GET http://localhost:8000/weapon/3/
 
+# обновление датчика
+PATCH {{baseUrl}}/sensors/1/
+Content-Type: application/json
 
+{
+  "description": "Перенес датчик на балкон"
+}
 
-# # примеры API-запросов
+###
 
-# @baseUrl = http://localhost:8000/api
+# добавление измерения
+POST {{baseUrl}}/measurements/
+Content-Type: application/json
 
-# # получение датчиков
-# GET {{baseUrl}}/sensors/
-# Content-Type: application/json
+{
+  "sensor": 1,
+  "temperature": 22.3
+}
 
-# ###
+###
 
-# # создание датчика
-# POST {{baseUrl}}/sensors/
-# Content-Type: application/json
-
-# {
-#   "name": "ESP32",
-#   "description": "Датчик на кухне за холодильником"
-# }
-
-# ###
-
-# # обновление датчика
-# PATCH {{baseUrl}}/sensors/1/
-# Content-Type: application/json
-
-# {
-#   "description": "Перенес датчик на балкон"
-# }
-
-# ###
-
-# # добавление измерения
-# POST {{baseUrl}}/measurements/
-# Content-Type: application/json
-
-# {
-#   "sensor": 1,
-#   "temperature": 22.3
-# }
-
-# ###
-
-# # получение информации по датчику
-# GET {{baseUrl}}/sensors/1/
-# Content-Type: application/json
+# получение информации по датчику
+GET {{baseUrl}}/sensors/2/
+Content-Type: application/json

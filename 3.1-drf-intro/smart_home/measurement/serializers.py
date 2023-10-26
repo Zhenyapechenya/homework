@@ -1,13 +1,13 @@
 from rest_framework import serializers
 
-from measurement.models import Weapon
+from measurement.models import Sensor
 
 
 
 # TODO: опишите необходимые сериализаторы
 
 
-class WeaponSerializer(serializers.ModelSerializer):
+class SensorSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Weapon
-        fields = ['id', 'power', 'rarity']
+        model = Sensor
+        fields = ['id', 'name', 'description']

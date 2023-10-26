@@ -1,10 +1,11 @@
-from rest_framework import generics
+from rest_framework.generics import ListAPIView, RetrieveUpdateAPIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import status
 
-from measurement.models import Weapon
-from measurement.serializers import WeaponSerializer
+from measurement.models import Sensor, Measurement
+from measurement.serializers import SensorSerializer
 
 # TODO: опишите необходимые обработчики, рекомендуется использовать generics APIView классы:
 # TODO: ListCreateAPIView, RetrieveUpdateAPIView, CreateAPIView
@@ -32,15 +33,35 @@ from measurement.serializers import WeaponSerializer
 #     def post(self, request):
 #         return Response({'status': 'ok'})
 
+###########################################################
+# class DemoView(generics.ListAPIView):
+#     queryset = Weapon.objects.all()
+#     serializer_class = WeaponSerializer
 
-class DemoView(generics.ListAPIView):
-    queryset = Weapon.objects.all()
-    serializer_class = WeaponSerializer
-
-    def post(self, request):
-        return Response({'status': 'ok'})
+#     def post(self, request):
+#         return Response({'status': 'ok'})
     
 
-class WeaponView(generics.RetrieveAPIView):
-    queryset = Weapon.objects.all()
-    serializer_class = WeaponSerializer
+# class WeaponView(generics.RetrieveAPIView):
+#     queryset = Weapon.objects.all()
+#     serializer_class = WeaponSerializer
+
+############################################################
+
+
+
+class SensorsView(ListAPIView):
+    queryset = Sensor.objects.all()
+    serializer_class = SensorSerializer
+
+    def post(self, request):
+        serializer = SensorSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class SensorChange(RetrieveUpdateAPIView):
+    queryset = Sensor.objects.all()
+    serializer_class = SensorSerializer  #надо будет изменить сериалайзер для подробной информации об объекте

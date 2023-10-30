@@ -1,14 +1,5 @@
 from django.db import models
-
-# TODO: опишите модели датчика (Sensor) и измерения (Measurement)
-
-
-
-# class Weapon(models.Model):
-#     power = models.IntegerField()
-#     rarity = models.CharField(max_length=50)
-#     value = models.IntegerField()
-    
+  
 
 # one
 class Sensor(models.Model):
@@ -18,7 +9,7 @@ class Sensor(models.Model):
 
 # to many
 class Measurement(models.Model):
-    sensor_id = models.ForeignKey(Sensor, on_delete=models.CASCADE)
+    sensor_id = models.ForeignKey(Sensor, on_delete=models.CASCADE, related_name='measurements')
     temperature = models.DecimalField(max_digits=10, decimal_places=4)
     date = models.DateTimeField(auto_now=True)
 

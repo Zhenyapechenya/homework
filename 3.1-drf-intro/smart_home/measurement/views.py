@@ -1,4 +1,5 @@
 from rest_framework.generics import ListAPIView, RetrieveUpdateAPIView, CreateAPIView
+from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -34,3 +35,4 @@ class SensorChange(RetrieveUpdateAPIView):
 class MeasurementCreate(CreateAPIView):
     queryset = Measurement.objects.all()
     serializer_class = MeasurementCreateSerializer  # создать измерение
+    from rest_framework.parsers import MultiPartParser

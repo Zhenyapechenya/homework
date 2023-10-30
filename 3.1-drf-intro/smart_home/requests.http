@@ -37,8 +37,9 @@ Content-Type: application/json
 
 {
   "sensor_id": 1,
-  "temperature": 23.20
+  "temperature": 28.20
 }
+
 
 ###
 

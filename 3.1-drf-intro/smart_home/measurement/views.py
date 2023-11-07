@@ -1,16 +1,15 @@
 from rest_framework.generics import ListAPIView, RetrieveUpdateAPIView, CreateAPIView
-from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework import status
 
-from measurement.models import Sensor, Measurement
-from measurement.serializers import SensorSerializer, ShowSensorSerializer, SensorDetailSerializer, MeasurementCreateSerializer
+from measurement.models import Sensor
+from measurement.serializers import SensorSerializer, SensorDetailSerializer, MeasurementCreateSerializer
 
 
 
 class SensorsView(ListAPIView):
     queryset = Sensor.objects.all()
-    serializer_class = ShowSensorSerializer  # посмотреть список датчиков
+    serializer_class = SensorSerializer  # посмотреть список датчиков
 
     def post(self, request):  # создать датчик
         serializer = SensorSerializer(data=request.data)
@@ -33,6 +32,5 @@ class SensorChange(RetrieveUpdateAPIView):
         
 
 class MeasurementCreate(CreateAPIView):
-    queryset = Measurement.objects.all()
     serializer_class = MeasurementCreateSerializer  # создать измерение
-    from rest_framework.parsers import MultiPartParser
+    

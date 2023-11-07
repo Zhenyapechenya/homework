@@ -13,14 +13,14 @@ Content-Type: application/json
 
 {
   "id": "777",
-  "name": "ESP77",
-  "description": "test"
+  "name": "555",
+  "description": "555"
 }
 
 ###
 
 # обновление датчика
-PATCH {{baseUrl}}/sensors/1/
+PATCH {{baseUrl}}/sensors/17/
 Content-Type: application/json
 
 {
@@ -36,7 +36,7 @@ POST {{baseUrl}}/measurements/
 Content-Type: application/json
 
 {
-  "sensor_id": 1,
+  "sensor_id": 17,
   "temperature": 28.20
 }
 
@@ -44,5 +44,5 @@ Content-Type: application/json
 ###
 
 # получение информации по датчику
-GET {{baseUrl}}/sensors/1/
+GET {{baseUrl}}/sensors/17/
 Content-Type: application/json

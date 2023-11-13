@@ -24,13 +24,13 @@ PATCH {{baseUrl}}/products/1/
 Content-Type: application/json
 
 {
-  "description": "Самые сочные и ароматные помидорки"
+  "description": "Сладкий и сочный"
 }
 
 ###
 
 # удаление продукта
-DELETE {{baseUrl}}/products/1/
+DELETE {{baseUrl}}/products/4/
 Content-Type: application/json
 
 ###
@@ -64,7 +64,7 @@ Content-Type: application/json
 ###
 
 # обновляем записи на складе
-PATCH {{baseUrl}}/stocks/4/
+PATCH {{baseUrl}}/stocks/9/
 Content-Type: application/json
 
 {
@@ -75,9 +75,9 @@ Content-Type: application/json
       "price": 130.80
     },
     {
-      "product": 3,
-      "quantity": 243,
-      "price": 145
+      "product": 4,
+      "quantity": 200,
+      "price": 150
     }
   ]
 }

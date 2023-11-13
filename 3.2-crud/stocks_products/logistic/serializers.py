@@ -16,8 +16,6 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class ProductPositionSerializer(serializers.ModelSerializer):
-    # product = ProductSerializer(many=True)
-
     class Meta:
         model = StockProduct
         fields = ['product', 'quantity', 'price']
@@ -30,30 +28,31 @@ class StockSerializer(serializers.ModelSerializer):
         model = Stock
         fields = ['id','address', 'positions']    
 
+
     def create(self, validated_data):
-        # достаем связанные данные для других таблиц
         positions = validated_data.pop('positions')
 
-        # создаем склад по его параметрам
         stock = super().create(validated_data)
-
-        # Заполняем связанную таблицу StockProduct
-        for position_data in positions:
-            StockProduct.objects.create(stock=stock, **position_data)
+        for pos in positions:
+            StockProduct.objects.create(
+                stock=stock,
+                product=pos['product'],
+                quantity=pos['quantity'],
+                price=pos['price']
+            )
 
         return stock
 
-    def update(self, instance, validated_data):
-        # достаем связанные данные для других таблиц
-        positions = validated_data.pop('positions')
 
-        # обновляем склад по его параметрам
+    def update(self, instance, validated_data):
+        positions = validated_data.pop('positions')
         stock = super().update(instance, validated_data)
 
-        # Обновляем связанную таблицу StockProduct
         for position_data in positions:
-            StockProduct.objects.update_or_create(defaults={'quantity': position_data['quantity'], 
-                                                            'price': position_data['price']}, 
-                                                            product=position_data['product'], 
-                                                            stock=stock)
+            StockProduct.objects.update_or_create(product=position_data['product'], 
+                                                quantity=position_data['quantity'],
+                                                price=position_data['price'], 
+                                                defaults={'product': position_data['product'], 
+                                                          'quantity': position_data['quantity'], 
+                                                          'price': position_data['price']})
         return stock

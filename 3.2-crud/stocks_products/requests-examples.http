@@ -46,10 +46,10 @@ POST {{baseUrl}}/stocks/
 Content-Type: application/json
 
 {
-  "address": "мнинград-u3",
+  "address": "адрес сегодня такой: www.ленинград-спб.ru3",
   "positions": [
     {
-      "product": 4,
+      "product": 2,
       "quantity": 250,
       "price": 120.50
     },
@@ -64,7 +64,7 @@ Content-Type: application/json
 ###
 
 # обновляем записи на складе
-PATCH {{baseUrl}}/stocks/9/
+PATCH {{baseUrl}}/stocks/10/
 Content-Type: application/json
 
 {
@@ -75,9 +75,9 @@ Content-Type: application/json
       "price": 130.80
     },
     {
-      "product": 4,
+      "product": 3,
       "quantity": 200,
-      "price": 150
+      "price": 150.5
     }
   ]
 }

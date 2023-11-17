@@ -1,3 +1,4 @@
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
@@ -14,8 +15,10 @@ class AdvertisementViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated, IsOwnerOrReadonly]
 
     def perform_create(self, serializer):
-        serializer.save(creator=self.request.user)
-        # return super().perform_create(serializer)
+        if self.request.user.is_authenticated:
+            serializer.save(creator=self.request.user)
+        else:
+            raise PermissionDenied(detail="Authentication required for this action.")
 
     # TODO: настройте ViewSet, укажите атрибуты для кверисета,
     #   сериализаторов и фильтров

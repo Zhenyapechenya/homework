@@ -9,7 +9,7 @@ Content-Type: application/json
 ###
 
 # получение объявлений
-GET {{baseUrl}}/advertisements/21
+GET {{baseUrl}}/advertisements/21/
 Content-Type: application/json
 
 ###
@@ -45,7 +45,7 @@ Authorization: Token a7314ba923fd2be47f1f13ce4ddb9eb2bd9bb853
 ###
 
 # фильтрация по создателю
-GET {{baseUrl}}/advertisements/?creator=2
+GET {{baseUrl}}/advertisements/?creator=1
 Content-Type: application/json
 
 ###

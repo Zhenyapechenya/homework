@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from advertisements.models import Advertisement
+from advertisements.models import Advertisement, FavoriteAdvertisement
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -20,10 +20,12 @@ class AdvertisementSerializer(serializers.ModelSerializer):
         read_only=True,
     )
 
+    is_favorite = serializers.SerializerMethodField()
+
     class Meta:
         model = Advertisement
         fields = ('id', 'title', 'description', 'creator',
-                  'status', 'created_at', )
+                  'status', 'created_at', 'is_favorite')
 
     def create(self, validated_data):
         """Метод для создания"""
@@ -45,3 +47,24 @@ class AdvertisementSerializer(serializers.ModelSerializer):
         if Advertisement.objects.filter(creator=user, status='OPEN').count() >= 10:
             raise serializers.ValidationError("У вас уже есть 10 открытых объявлений.")
         return data
+
+    def get_is_favorite(self, obj):
+        user = self.context['request'].user
+        if user.is_authenticated:
+            return FavoriteAdvertisement.objects.filter(user=user, advertisement=obj).exists()
+        return False
+    
+
+class FavoriteAdvertisementSerializer(serializers.ModelSerializer):
+    title = serializers.CharField(source='advertisement.title')
+    description = serializers.CharField(source='advertisement.description')
+    creator = serializers.PrimaryKeyRelatedField(source='advertisement.creator', read_only=True)
+    status = serializers.CharField(source='advertisement.status')
+    created_at = serializers.DateTimeField(source='advertisement.created_at')
+
+    # Добавляем поле is_favorite, которое уже есть в модели FavoriteAdvertisement
+    is_favorite = serializers.BooleanField(default=True)
+
+    class Meta:
+        model = FavoriteAdvertisement
+        fields = ['advertisement', 'created_at', 'title', 'description', 'creator', 'status', 'created_at', 'is_favorite']

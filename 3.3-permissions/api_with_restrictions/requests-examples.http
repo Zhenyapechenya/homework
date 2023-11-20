@@ -34,12 +34,12 @@ Authorization: Token a7314ba923fd2be47f1f13ce4ddb9eb2bd9bb853
 ###
 
 # попытка поменять объявление
-PATCH {{baseUrl}}/advertisements/32/
+PATCH {{baseUrl}}/advertisements/34/
 Content-Type: application/json
-Authorization: Token a7314ba923fd2be47f1f13ce4ddb9eb2bd9bb853
+Authorization: Token 4165dea908e9dfc2b1de058d50eab363dd2b83c2
 
 {
-  "status": "CLOSED"
+  "status": "DRAFT"
 }
 
 ###

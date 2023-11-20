@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from advertisements.models import Advertisement, FavoriteAdvertisement
+from advertisements.models import Advertisement, AdvertisementStatusChoices, FavoriteAdvertisement
 from advertisements.permissions import IsOwnerOrReadonly
 from advertisements.serializers import AdvertisementSerializer, FavoriteAdvertisementSerializer
 
@@ -67,6 +67,7 @@ class AdvertisementViewSet(ModelViewSet):
         else:
             return Response({"detail": "Необходима аутентификация для добавления в избранное."}, status=status.HTTP_400_BAD_REQUEST)
 
+
     @action(detail=False, methods=['get'])
     def favorite_advertisements(self, request):
         # Проверяем, аутентифицирован ли пользователь
@@ -77,3 +78,14 @@ class AdvertisementViewSet(ModelViewSet):
             return Response(serializer.data)
         else:
             return Response({"detail": "Вы не аутентифицированы"}, status=status.HTTP_401_UNAUTHORIZED)
+        
+    
+    # метод для просмотра объявлений только автору в режиме черновика
+    @action(detail=True, methods=['get'], permission_classes=[IsOwnerOrReadonly])
+    def draft(self, request, pk=None):
+        advertisement = self.get_object()
+        if advertisement.status == AdvertisementStatusChoices.DRAFT:
+            serializer = AdvertisementSerializer(advertisement, context={'request': request})
+            return Response(serializer.data)
+        else:
+            return Response({"detail": "Это объявление не в статусе DRAFT."}, status=status.HTTP_403_FORBIDDEN)

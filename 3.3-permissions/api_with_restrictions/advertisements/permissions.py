@@ -3,13 +3,10 @@ from rest_framework.permissions import BasePermission
 class IsOwnerOrReadonly(BasePermission):
 
     def has_object_permission(self, request, view, obj):
-
         if obj.status == 'DRAFT':
-            print('DRAft')
             return request.user == obj.creator
         
         else:
-            print('dddddd')
             # Разрешить GET, HEAD или OPTIONS запросы (т.е. только для чтения).
             if request.method in ('GET'):
                 return True
@@ -19,5 +16,7 @@ class IsOwnerOrReadonly(BasePermission):
                 return True
 
             # Проверка, является ли пользователь владельцем объявления.
-            return request.user == obj.creator
-        
+        return request.user == obj.creator
+
+
+        # user.is_authenticated

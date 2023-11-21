@@ -45,7 +45,7 @@ Authorization: Token 4165dea908e9dfc2b1de058d50eab363dd2b83c2
 ###
 
 # фильтрация по создателю
-GET {{baseUrl}}/advertisements/?creator=2
+GET {{baseUrl}}/advertisements/?creator=1
 Content-Type: application/json
 
 ###
@@ -57,7 +57,7 @@ Content-Type: application/json
 ###
 
 # фильтрация по статусу
-GET {{baseUrl}}/advertisements/?status=CLOSED
+GET {{baseUrl}}/advertisements/?status=DRAFT
 Content-Type: application/json
 
 ###

@@ -40,7 +40,7 @@ class AdvertisementViewSet(ModelViewSet):
 
     def get_permissions(self):
         """Получение прав для действий."""
-        if self.action in ['create', 'update', 'partial_update', 'destroy', 'retrieve', 'get']:
+        if self.action in ['create', 'update', 'partial_update', 'destroy', 'retrieve', 'list']:
             return [IsOwnerOrReadonly()]
         return []
 
@@ -87,5 +87,4 @@ class AdvertisementViewSet(ModelViewSet):
         if advertisement.status == AdvertisementStatusChoices.DRAFT:
             serializer = AdvertisementSerializer(advertisement, context={'request': request})
             return Response(serializer.data)
-        else:
-            return Response({"detail": "Это объявление не в статусе DRAFT."}, status=status.HTTP_403_FORBIDDEN)
+        

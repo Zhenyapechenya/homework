@@ -48,7 +48,6 @@ Authorization: Token f830803f59caf5f99d341800b7c98995d8b96f2f
 # фильтрация по создателю
 GET {{baseUrl}}/advertisements/?creator=3
 Content-Type: application/json
-Authorization: Token f830803f59caf5f99d341800b7c98995d8b96f2f
 
 ###
 

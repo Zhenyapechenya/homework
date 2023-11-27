@@ -1,7 +1,19 @@
+import json
 import pytest
 from rest_framework.test import APIClient
 
 from students.models import Course, Student
+
+
+
+@pytest.fixture
+def client():
+    return APIClient()
+
+
+@pytest.fixture
+def user():
+    return Student.objects.create(name='Sblushin')
 
 
 def test_example():
@@ -9,12 +21,10 @@ def test_example():
 
 
 @pytest.mark.django_db
-def test_api():
+def test_get_courses(client, user):
     # Arrange
-    client = APIClient()
-    student = Student.objects.create(name='Sblushin')
     course = Course.objects.create(name='Mathematics')
-    course.students.add(student)
+    course.students.add(user)
 
     # Act
     response = client.get('/api/v1/courses/')
@@ -25,3 +35,10 @@ def test_api():
     data = response.json()
     assert len(data) == 1
     assert data[0]['name'] == 'Mathematics'
+
+
+
+@pytest.mark.django_db
+def test_creste_course(client, user):
+    response = client.post('/api/v1/courses/', data={'student': user.id, 'name': 'Physics'}, format='json')
+    response.status_code == 201

@@ -120,24 +120,23 @@ def test_delete_course(client, course_factory):
     assert response.status_code == 204
 
 
+# добавление студентов на курс
+@pytest.mark.django_db
+def test_get_courses(client, student_factory, course_factory):
+    # Arrange
+    course = course_factory(_quantity=1)[0]
+    students = student_factory(_quantity=10)
+    course.students.add(*students)
 
+    # Act
+    response = client.get('/api/v1/courses/')
 
-# @pytest.mark.django_db
-# def test_get_courses(client, user):
-#     # Arrange
-#     course = Course.objects.create(name='Mathematics')
-#     course.students.add(user)
-
-#     # Act
-#     response = client.get('/api/v1/courses/')
-
-#     # Assert
-#     assert response.status_code == 200
-
-#     data = response.json()
-#     assert len(data) == 1
-#     assert data[0]['name'] == 'Mathematics'
-
+    # Assert
+    assert response.status_code == 200
+    data = response.json()
+    assert data[0]['name'] == course.name
+    assert data[0]['students'] == [s.id for s in students]
+    
 
 
 

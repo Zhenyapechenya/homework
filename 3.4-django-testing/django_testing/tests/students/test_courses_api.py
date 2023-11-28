@@ -12,10 +12,12 @@ def client():
     return APIClient()
 
 
-# создает пользователя и возвращает его
 @pytest.fixture
-def user():
-    return Student.objects.create(name='Sblushin')
+def student_factory():
+    def factory(*args, **kwargs):
+        return baker.make(Student, *args, **kwargs)
+    
+    return factory
 
 
 @pytest.fixture
@@ -27,32 +29,21 @@ def course_factory():
 
 
 
-
-
-def test_example():
-    assert True, "Just test example"
-
-
+# проверка получения первого курса (retrieve-логика)
 @pytest.mark.django_db
-def test_get_courses(client, user):
-    # Arrange
-    course = Course.objects.create(name='Mathematics')
-    course.students.add(user)
+def test_get_one_course(client, course_factory):
+    course = course_factory(_quantity=1)[0]
+    
+    response = client.get(f'/api/v1/courses/{course.id}/')
 
-    # Act
-    response = client.get('/api/v1/courses/')
-
-    # Assert
     assert response.status_code == 200
-
     data = response.json()
-    assert len(data) == 1
-    assert data[0]['name'] == 'Mathematics'
+    assert data['name'] == course.name
 
 
-
+# проверка получения списка курсов (list-логика)
 @pytest.mark.django_db
-def test_create_course(client, user, course_factory):
+def test_get_many_courses(client, course_factory):
     courses = course_factory(_quantity=10)
 
     response = client.get('/api/v1/courses/')
@@ -62,4 +53,94 @@ def test_create_course(client, user, course_factory):
     assert len(data) == len(courses)
     for i, m in enumerate(data):
         assert m['name'] == courses[i].name
+
+
+# проверка фильтрации списка курсов по id
+@pytest.mark.django_db
+def test_filter_by_id(client, course_factory):
+    course_id = course_factory(_quantity=100)[69].id
+
+    response = client.get('/api/v1/courses/', {'id': f'{course_id}'})
+
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 1
+    assert data[0]['id'] == course_id
+
+
+# проверка фильтрации списка курсов по name
+@pytest.mark.django_db
+def test_filter_by_name(client, course_factory):
+    course_name = course_factory(_quantity=100)[69].name
+
+    response = client.get('/api/v1/courses/', {'name': f'{course_name}'})
+
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 1
+    assert data[0]['name'] == course_name
+
+
+# тест успешного создания курса
+@pytest.mark.django_db
+def test_create_course(client):
+    course_data = {
+        'name': 'Literature'
+    }
+
+    response = client.post('/api/v1/courses/', data=course_data)
+
+    assert response.status_code == 201
+    data = response.json()
+    assert data['name'] == 'Literature'
+
+
+# тест успешного обновления курса
+@pytest.mark.django_db
+def test_update_course(client, course_factory):
+    course = course_factory(_quantity=1)
+    course_data = {
+        'name': 'Musics'
+    }
+
+    response = client.patch(f'/api/v1/courses/{course[0].id}/', data=course_data)
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data['name'] == 'Musics'
+
+
+# тест успешного удаления курса
+@pytest.mark.django_db
+def test_delete_course(client, course_factory):
+    course = course_factory(_quantity=1)
+
+    response = client.delete(f'/api/v1/courses/{course[0].id}/')
+    
+    assert response.status_code == 204
+
+
+
+
+# @pytest.mark.django_db
+# def test_get_courses(client, user):
+#     # Arrange
+#     course = Course.objects.create(name='Mathematics')
+#     course.students.add(user)
+
+#     # Act
+#     response = client.get('/api/v1/courses/')
+
+#     # Assert
+#     assert response.status_code == 200
+
+#     data = response.json()
+#     assert len(data) == 1
+#     assert data[0]['name'] == 'Mathematics'
+
+
+
+
+
+
 

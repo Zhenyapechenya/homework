@@ -1,9 +1,23 @@
 import json
 import pytest
-from rest_framework.test import APIClient
+from django.core.exceptions import ValidationError
+from django.conf import settings
 from model_bakery import baker
+from rest_framework.test import APIClient
 
 from students.models import Course, Student
+
+# @pytest.fixture
+# def client():
+#     return APIClient()
+
+
+# @pytest.fixture
+# def message_factory():
+#     def factory(*args, **kwargs):
+#         return baker.make(Course, *args, **kwargs)
+
+#     return factory
 
 
 
@@ -120,7 +134,7 @@ def test_delete_course(client, course_factory):
     assert response.status_code == 204
 
 
-# добавление студентов на курс
+# добавление нескольких студентов на курс
 @pytest.mark.django_db
 def test_get_courses(client, student_factory, course_factory):
     # Arrange
@@ -139,7 +153,61 @@ def test_get_courses(client, student_factory, course_factory):
     
 
 
+# проверка валидации на максимальное число студентов на курсе
+
+# # валидация не должна вызывать ошибки
+# @pytest.mark.django_db
+# @pytest.mark.parametrize('max_students_per_course', [1, 5, 10, 15, 21], indirect=True)
+# def test_course_accepts_students(client, course_factory, student_factory, max_students_per_course, settings):
+#     course = course_factory()
+#     students = student_factory(_quantity=settings.MAX_STUDENTS_PER_COURSE + 1)
+#     course.students.add(*students)
+
+#     response = client.get(f'/api/v1/courses/{course.id}/')
+
+#     data = response.json()
+#     assert data['name'] == course.name
+#     assert len(data['students']) == min(max_students_per_course, settings.MAX_STUDENTS_PER_COURSE)
 
 
+# # ожидаем ошибку при попытке добавить более 20 студентов
+# @pytest.mark.django_db
+# # @pytest.mark.parametrize('max_students_per_course', [20], indirect=True)
+# def test_course_max_students_limit_exceeded(course_factory, student_factory, settings):
+#     course = course_factory()
+#     students = student_factory(_quantity=settings.MAX_STUDENTS_PER_COURSE + 1)
+
+#     try:
+#         course.students.add(*students)
+#     except ValidationError:
+#         pass
+#     else:
+#         assert settings.MAX_STUDENTS_PER_COURSE + 1 == 21
+    
 
 
+@pytest.fixture
+def settings_with_max_students(settings):
+    # original_value = settings.MAX_STUDENTS_PER_COURSE
+    # settings.MAX_STUDENTS_PER_COURSE = request.param
+    # yield settings.MAX_STUDENTS_PER_COURSE
+    # settings.MAX_STUDENTS_PER_COURSE = original_value
+    settings.MAX_STUDENTS_PER_COURSE = 20
+    return settings
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("enrolled_students_count, should_raise_error", [
+    (settings.MAX_STUDENTS_PER_COURSE - 1, False),
+    (settings.MAX_STUDENTS_PER_COURSE, True),
+])
+def test_enrollment_validation(settings_with_max_students, enrolled_students_count, should_raise_error, course_factory, student_factory):
+    course = course_factory(_quantity=1)[0]
+    students = student_factory(_quantity=enrolled_students_count)
+    course.students.add(*students)
+
+    if should_raise_error:
+        with pytest.raises(ValidationError, match=f"Максимальное число студентов на курсе: {settings.MAX_STUDENTS_PER_COURSE}"):
+            course.clean()
+    else:
+        course.clean()

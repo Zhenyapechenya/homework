@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+MAX_STUDENTS_PER_COURSE = 20
+
 
 # Application definition
 
